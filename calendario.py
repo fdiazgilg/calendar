@@ -49,10 +49,11 @@ class WeekDay(ttk.Frame):
 class MonthDay(ttk.Frame):
     cadenaDia = ''
 
-    def __init__(self, parent):
+    def __init__(self, parent, onClic):
         ttk.Frame.__init__(self, parent, width=WIDTHBTN, height=HEIGHTBTN)
 
         self.pack_propagate(0)
+        self.onClic = onClic
 
         m = ttk.Style()
         m.theme_use('alt')
@@ -74,13 +75,10 @@ class MonthDay(ttk.Frame):
         try:
             if isinstance(self.cadenaDia, date):
                 self.monthDay.config(foreground='blue')
-                self.asignaFx(self.cadenaDia)
+                fechaElegida = str(self.cadenaDia.day) + ' de ' + (self.cadenaDia.strftime("%B")).title() + ' de ' + str(self.cadenaDia.year)
+                self.onClic(fechaElegida)
         except:
             return None
-
-    def asignaFx(self, texto):
-        fechaElegida = str(self.cadenaDia.day) + ' de ' + (self.cadenaDia.strftime("%B")).title() + ' de ' + str(self.cadenaDia.year)
-        print(fechaElegida)
 
 
 class Display(ttk.Frame):
@@ -104,11 +102,14 @@ class Calendar(ttk.Frame):
 
         for rowMonth in range(2, 8):
             for columnMonth in range(0, 7):
-                self.day = MonthDay(self)
+                self.day = MonthDay(self, self.informaDia)
                 self.day.grid(row=rowMonth, column=columnMonth)
                 self.listDays.append(self.day)
 
         return layoutCalendar
+
+    def informaDia(self, valor):
+        self.fxBox.date.config(text=valor)
 
 
     def __init__(self, parent):
